@@ -1,5 +1,50 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project: leocar (research / MVP phase)
+
+**Status:** Research only. No production feature is built yet.
+
+**Goal:** Collect incoming client messages from three sources — **Telegram Business**,
+**WhatsApp Business**, and **Viber Business** numbers — and aggregate them into **one
+Telegram channel**. The user is helping a friend who runs the business behind "leocar".
+
+## Scope
+
+**In scope:** Aggregating inbound messages from the 3 messenger business numbers into a
+single Telegram channel (read visibility is the stated need; whether replies are needed is TBD).
+
+**Out of scope:** Anything related to **RO App** (`web.roapp.io`) and webhooks. The existing
+RO App files in this repo are exploratory leftovers from an earlier spike and are **not** part
+of this project or the MVP. Do not extend them or build on them unless the user explicitly
+returns to that.
+
+## Existing files (out of scope — context only)
+
+- `web-hook.php`, `index.php`, `doc.md`, `logs/` — an RO App webhook receiver that logs CRM
+  events (Lead/Client/Comment...). Ignore for the messenger-aggregation work. No code for the
+  actual goal exists yet.
+
+## No build tooling
+
+There is no package manager, test suite, or build step relevant to the current goal. If a
+solution is built here it will start from scratch; don't assume the existing PHP setup is the
+foundation.
+
+## Open questions (resolve before choosing a solution)
+
+1. **One-way or two-way?** Read-only aggregation into a TG channel, or must the team also reply
+   from there back to the client?
+2. **Accounts:** Do the 3 business numbers already exist and are they set up for API/bot access?
+3. **Build vs. buy:** Open to a third-party omnichannel aggregator (fastest MVP) or must it be
+   self-built? Note that the official WhatsApp/Viber/Telegram-Business APIs and aggregators
+   generally cost money and require approval — cost tolerance matters.
+4. **Volume / region:** Expected message volume and country/region (affects which aggregators
+   are available, e.g. CIS-market tools vs. global ones).
+
+---
+
 ## Workflow Rules
 
 **Use `brainstorming` skill before any creative or feature work. Use `writing-plans` skill for multi-step tasks.**
@@ -46,7 +91,7 @@ Use these skills when the situation matches:
 
 
 - `brainstorming` — before new features, creative work, or architectural decisions
-- `writing-plans` — for multi-step implementation tasks
+- `writing-plans` — before multi-step implementation tasks
 - `verification-before-completion` — before claiming work is complete
 - `systematic-debugging` — for bugs, test failures, unexpected behavior
 - `requesting-code-review` — after completing tasks, major features, or before merge

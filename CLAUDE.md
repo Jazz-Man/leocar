@@ -20,6 +20,23 @@ RO App files in this repo are exploratory leftovers from an earlier spike and ar
 of this project or the MVP. Do not extend them or build on them unless the user explicitly
 returns to that.
 
+## Constraints (settled)
+
+- **No Russian services.** Business is Ukraine-based; RU vendors are excluded on principle
+  and due to payment/sanctions problems. Confirmed/likely RU → banned: **Radist.Online**,
+  **Chat2Desk**, **МТС Exolve/exolve.ru**; verify jurisdiction for Pact.im, WAMM.chat, Umnico
+  before recommending. Prefer **Ukrainian** (HelpCrunch, SendPulse) or **international**
+  (respond.io, Trengo, Sleekflow, Chatwoot) vendors.
+- **Approach:** aggregator SaaS (chosen over self-built). Region: Ukraine.
+- **Channel feasibility (verified):** Telegram Business number — readable via the official
+  *connected bot* (needs Premium/Business); WhatsApp — Cloud API with *coexistence* (same
+  number in app + API); Viber — official partner account only (Messente/Sinch/Messaggio…),
+  approval + cost — the hardest channel in any approach.
+- **Key tension:** aggregators put messages in **their own shared inbox**, not a literal
+  Telegram channel. Whether "TG channel" is a hard requirement or just the friend's current
+  hacky workaround is **pending the user's talk with the friend** — this decides Approach A
+  (shared inbox) vs B (aggregator + relay → TG channel).
+
 ## Existing files (out of scope — context only)
 
 - `web-hook.php`, `index.php`, `doc.md`, `logs/` — an RO App webhook receiver that logs CRM

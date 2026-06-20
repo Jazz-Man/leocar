@@ -2,63 +2,58 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project: leocar (research / MVP phase)
+## Project: leocar (research concluded)
 
-**Status:** Research only. No production feature is built yet.
+**Status:** Research concluded (2026-06-18). A decision was made; nothing is implemented in
+this repo yet. This file records the goal, the decision, and what was evaluated.
 
-**Goal:** Collect incoming client messages from three sources — **Telegram Business**,
-**WhatsApp Business**, and **Viber Business** numbers — and aggregate them into **one
-Telegram channel**. The user is helping a friend who runs the business behind "leocar".
+**Goal:** Give the team one place to see (and reply to) client messages arriving on three
+business numbers — **Telegram**, **WhatsApp**, **Viber**. "One Telegram channel" was the
+friend's original hacky workaround, not a hard requirement.
 
-## Scope
+## Decision (2026-06-18)
 
-**In scope:** Aggregating inbound messages from the 3 messenger business numbers into a
-single Telegram channel (read visibility is the stated need; whether replies are needed is TBD).
+**Use the existing CRM (RO App, `web.roapp.io`) + the e-chat.tech integration** to bring the
+three messengers into the CRM client card — one interface, ~**$600/year**.
 
-**Out of scope:** Anything related to **RO App** (`web.roapp.io`) and webhooks. The existing
-RO App files in this repo are exploratory leftovers from an earlier spike and are **not** part
-of this project or the MVP. Do not extend them or build on them unless the user explicitly
-returns to that.
+Why: every standalone aggregator (HelpCrunch, SendPulse, respond.io…) routes WhatsApp through
+its own paid BSP and reads Viber only via a bot, producing a costly "zoo of integrations"
+stacked on top of the CRM bill. RO App + e-chat.tech bundles the three channels into the CRM
+the team already pays for, at lower total cost.
 
-## Constraints (settled)
+- **e-chat.tech** connects Viber/Telegram/WhatsApp numbers and surfaces chats from the CRM
+  client card. Legal entity registered in **Indonesia** (ECHAT TECH COMMUNICATION LLC) — not RU.
+- This **brings RO App back into scope as the hub**; the earlier "RO App out of scope" framing
+  is superseded.
 
-- **No Russian services.** Business is Ukraine-based; RU vendors are excluded on principle
-  and due to payment/sanctions problems. Confirmed/likely RU → banned: **Radist.Online**,
-  **Chat2Desk**, **МТС Exolve/exolve.ru**; verify jurisdiction for Pact.im, WAMM.chat, Umnico
-  before recommending. Prefer **Ukrainian** (HelpCrunch, SendPulse) or **international**
-  (respond.io, Trengo, Sleekflow, Chatwoot) vendors.
-- **Approach:** aggregator SaaS (chosen over self-built). Region: Ukraine.
-- **Channel feasibility (verified):** Telegram Business number — readable via the official
-  *connected bot* (needs Premium/Business); WhatsApp — Cloud API with *coexistence* (same
-  number in app + API); Viber — official partner account only (Messente/Sinch/Messaggio…),
-  approval + cost — the hardest channel in any approach.
-- **Key tension:** aggregators put messages in **their own shared inbox**, not a literal
-  Telegram channel. Whether "TG channel" is a hard requirement or just the friend's current
-  hacky workaround is **pending the user's talk with the friend** — this decides Approach A
-  (shared inbox) vs B (aggregator + relay → TG channel).
+## Constraints (still valid)
 
-## Existing files (out of scope — context only)
+- **No Russian services.** Ukraine-based; RU vendors excluded on principle and due to
+  payment/sanctions. Confirmed/likely RU → banned: Radist.Online, Chat2Desk, МТС Exolve.
+  e-chat.tech verified non-RU (Indonesia).
+- Region: Ukraine.
 
-- `web-hook.php`, `index.php`, `doc.md`, `logs/` — an RO App webhook receiver that logs CRM
-  events (Lead/Client/Comment...). Ignore for the messenger-aggregation work. No code for the
-  actual goal exists yet.
+## What was evaluated (if revisited)
+
+- **Channel feasibility:** Telegram Business — readable via the official *connected bot*
+  (needs Premium); WhatsApp — Cloud API with *coexistence* (same number in app + API), ~$0 for
+  inbound (1,000 free service conversations/mo, 24h reply window), paid per template (UA
+  ~$0.025 utility / ~$0.10 marketing); Viber — only a bot or an official partner Business
+  Messages account.
+- **Aggregators considered (non-RU):** HelpCrunch (UA, $29/mo Pro + separate 360dialog ~$59/mo
+  for WhatsApp), SendPulse (UA, free/$12/mo, *bundles* the WhatsApp BSP — best value),
+  respond.io (intl, from $79/mo). All aggregate into *their own* inbox, not a Telegram channel.
+
+## Existing files (legacy context)
+
+- `web-hook.php`, `index.php`, `doc.md`, `logs/` — an older RO App webhook receiver that logs
+  CRM events. Not used by the chosen solution; kept as historical context.
 
 ## No build tooling
 
-There is no package manager, test suite, or build step relevant to the current goal. If a
-solution is built here it will start from scratch; don't assume the existing PHP setup is the
-foundation.
-
-## Open questions (resolve before choosing a solution)
-
-1. **One-way or two-way?** Read-only aggregation into a TG channel, or must the team also reply
-   from there back to the client?
-2. **Accounts:** Do the 3 business numbers already exist and are they set up for API/bot access?
-3. **Build vs. buy:** Open to a third-party omnichannel aggregator (fastest MVP) or must it be
-   self-built? Note that the official WhatsApp/Viber/Telegram-Business APIs and aggregators
-   generally cost money and require approval — cost tolerance matters.
-4. **Volume / region:** Expected message volume and country/region (affects which aggregators
-   are available, e.g. CIS-market tools vs. global ones).
+No package manager, test suite, or build step. The chosen path (RO App + e-chat.tech) is
+configuration in third-party SaaS, not code in this repo — unless a custom relay/webhook is
+later needed.
 
 ---
 
